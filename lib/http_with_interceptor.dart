@@ -3,8 +3,8 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 import 'package:http/http.dart';
-import 'package:http_interceptor/http_interceptor.dart';
-import 'package:http_interceptor/interceptor_contract.dart';
+import 'package:asgard_http_interceptor/http_interceptor.dart';
+import 'package:asgard_http_interceptor/interceptor_contract.dart';
 import 'package:meta/meta.dart';
 
 ///Class to be used by the user as a replacement for 'http' with interceptor supported.

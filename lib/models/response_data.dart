@@ -1,5 +1,5 @@
 import 'package:http/http.dart';
-import 'package:http_interceptor/http_methods.dart';
+import 'package:asgard_http_interceptor/http_methods.dart';
 
 class ResponseData {
   String url;

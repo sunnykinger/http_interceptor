@@ -2,8 +2,8 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart';
 
-import 'package:http_interceptor/http_methods.dart';
-import 'package:http_interceptor/utils.dart';
+import 'package:asgard_http_interceptor/http_methods.dart';
+import 'package:asgard_http_interceptor/utils.dart';
 
 class RequestData {
   Method method;

@@ -1,4 +1,4 @@
-import 'package:http_interceptor/models/models.dart';
+import 'package:asgard_http_interceptor/models/models.dart';
 
 abstract class RetryPolicy {
   bool shouldAttemptRetryOnException(Exception reason) => false;

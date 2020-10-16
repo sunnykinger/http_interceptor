@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:http_interceptor/utils.dart';
+import 'package:asgard_http_interceptor/utils.dart';
 
 main() {
   group("addParametersToStringUrl", () {
@@ -57,7 +57,8 @@ main() {
 
       // Assert
       Map<String, String> allParameters = {"foo": "bar", "num": "0"};
-      Uri expectedUrl = Uri.https("www.google.com", "/helloworld", allParameters);
+      Uri expectedUrl =
+          Uri.https("www.google.com", "/helloworld", allParameters);
       expect(parameterUri, equals(expectedUrl));
     });
   });

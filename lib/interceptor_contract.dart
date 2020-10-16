@@ -1,4 +1,4 @@
-import 'package:http_interceptor/models/models.dart';
+import 'package:asgard_http_interceptor/models/models.dart';
 
 ///Interceptor interface to create custom Interceptor for http.
 ///Extend this class and override the functions that you want
