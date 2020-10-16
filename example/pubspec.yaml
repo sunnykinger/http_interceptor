@@ -1,5 +1,5 @@
-name: http_interceptor_example
-description: Demonstrates how to use the http_interceptor plugin.
+name: asgard_http_interceptor_example
+description: Demonstrates how to use the asgard_http_interceptor plugin.
 version: 0.0.1+1
 publish_to: 'none'
 
@@ -15,7 +15,7 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
 
-  http_interceptor:
+  asgard_http_interceptor:
     path: ../
 
 flutter:

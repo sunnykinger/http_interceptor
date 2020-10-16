@@ -1,6 +1,6 @@
 name: asgard_http_interceptor
 description: Fork of http_interceptor with attachment support.
-version: 0.0.3
+version: 0.0.4
 homepage: https://github.com/sunnykinger/http_interceptor
 repository: https://github.com/sunnykinger/http_interceptor
 

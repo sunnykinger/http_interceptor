@@ -11,6 +11,7 @@ class RequestData {
   String baseUrl;
   Map<String, String> headers;
   Map<String, String> params;
+  Map<String, String> fields;
   dynamic body;
   List<MultipartFile> files;
   Encoding encoding;
@@ -20,6 +21,7 @@ class RequestData {
     @required this.baseUrl,
     this.headers,
     this.params,
+    this.fields,
     this.body,
     this.files,
     this.encoding,
@@ -49,9 +51,9 @@ class RequestData {
     return RequestData(
       method: methodFromString(request.method),
       baseUrl: baseUrl,
-      files: request.files,
+      files: request.files ?? <MultipartFile>[],
       headers: request.headers ?? <String, String>{},
-      params: request.fields ?? <String, String>{},
+      fields: request.fields ?? <String, String>{},
     );
   }
 
@@ -60,6 +62,8 @@ class RequestData {
     MultipartRequest request =
         new MultipartRequest(methodToString(method), reqUrl);
     if (headers != null) request.headers.addAll(headers);
+    if (fields != null) request.fields.addAll(fields);
+    if (files != null) request.files.addAll(files);
     return request;
   }
 
