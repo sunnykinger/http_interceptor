@@ -41,6 +41,28 @@ class RequestData {
     );
   }
 
+  factory RequestData.fromMultipartHttpRequest(MultipartRequest request) {
+    var params = Map<String, String>();
+    request.url.queryParameters.forEach((key, value) {
+      params[key] = value;
+    });
+    String baseUrl = request.url.origin + request.url.path;
+    return RequestData(
+      method: methodFromString(request.method),
+      baseUrl: baseUrl,
+      headers: request.headers ?? <String, String>{},
+      params: params ?? <String, String>{},
+    );
+  }
+
+  MultipartRequest toMultipartHttpRequest() {
+    var reqUrl = Uri.parse(addParametersToStringUrl(baseUrl, params));
+    MultipartRequest request =
+        new MultipartRequest(methodToString(method), reqUrl);
+    if (headers != null) request.headers.addAll(headers);
+    return request;
+  }
+
   Request toHttpRequest() {
     var reqUrl = Uri.parse(addParametersToStringUrl(baseUrl, params));
 

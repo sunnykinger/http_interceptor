@@ -188,6 +188,36 @@ class HttpClientWithInterceptor extends BaseClient {
     return response;
   }
 
+  Future<Response> _sendUnstreamedWithAttachments({
+    @required Method method,
+    @required url,
+    @required Map<String, String> headers,
+    @required Map<String, String> files,
+    Map<String, String> params,
+  }) async {
+    if (url is String) {
+      url = Uri.parse(addParametersToStringUrl(url, null));
+    } else if (url is Uri) {
+      url = addParametersToUrl(url, null);
+    } else {
+      throw HttpInterceptorException(
+          "Malformed URL parameter. Check that the url used is either a String or a Uri instance.");
+    }
+    var request = MultipartRequest(methodToString(method), url);
+    params.forEach((key, value) {
+      request.fields[key] = value;
+    });
+    //do not use foreach in case of adding future elements
+    for (var entry in files.entries) {
+      request.files.add(await MultipartFile.fromPath(entry.key, entry.value));
+    }
+    if (headers != null) request.headers.addAll(headers);
+    var response = await _attemptMultipartRequest(request);
+    // Intercept response
+    response = await _interceptResponse(response);
+    return response;
+  }
+
   void _checkResponseSuccess(url, Response response) {
     if (response.statusCode < 400) return;
     var message = "Request to $url failed with status ${response.statusCode}";
@@ -196,6 +226,38 @@ class HttpClientWithInterceptor extends BaseClient {
     }
     if (url is String) url = Uri.parse(url);
     throw new ClientException("$message.", url);
+  }
+
+  Future<Response> _attemptMultipartRequest(MultipartRequest request) async {
+    var response;
+    try {
+      // Intercept request
+      request = await _interceptMultipartRequest(request);
+      var stream = requestTimeout == null
+          ? await send(request)
+          : await send(request).timeout(requestTimeout);
+
+      response = await Response.fromStream(stream);
+      if (retryPolicy != null &&
+          retryPolicy.maxRetryAttempts > _retryCount &&
+          await retryPolicy.shouldAttemptRetryOnResponse(
+              ResponseData.fromHttpResponse(response))) {
+        _retryCount += 1;
+        return _attemptMultipartRequest(request);
+      }
+    } catch (error) {
+      if (retryPolicy != null &&
+          retryPolicy.maxRetryAttempts > _retryCount &&
+          retryPolicy.shouldAttemptRetryOnException(error)) {
+        _retryCount += 1;
+        return _attemptMultipartRequest(request);
+      } else {
+        rethrow;
+      }
+    }
+
+    _retryCount = 0;
+    return response;
   }
 
   Future<Response> _attemptRequest(Request request) async {
@@ -238,6 +300,18 @@ class HttpClientWithInterceptor extends BaseClient {
         data: RequestData.fromHttpRequest(request),
       );
       request = interceptedData.toHttpRequest();
+    }
+
+    return request;
+  }
+
+  Future<MultipartRequest> _interceptMultipartRequest(
+      MultipartRequest request) async {
+    for (InterceptorContract interceptor in interceptors) {
+      RequestData interceptedData = await interceptor.interceptRequest(
+        data: RequestData.fromMultipartHttpRequest(request),
+      );
+      request = interceptedData.toMultipartHttpRequest();
     }
 
     return request;
