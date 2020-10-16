@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
-import 'package:asgard_http_interceptor/http_interceptor.dart';
+
 import 'package:http/http.dart';
 import 'package:http/io_client.dart';
 import 'package:asgard_http_interceptor/interceptor_contract.dart';
@@ -100,6 +100,17 @@ class HttpClientWithInterceptor extends BaseClient {
         encoding: encoding,
       );
 
+  Future<Response> postWithAttachments(url,
+          {Map<String, String> headers,
+          Map<String, String> params,
+          Map<String, String> files}) =>
+      _sendUnstreamedWithAttachments(
+          method: Method.POST,
+          url: url,
+          headers: headers,
+          files: files,
+          params: params);
+
   Future<Response> put(url,
           {Map<String, String> headers, body, Encoding encoding}) =>
       _sendUnstreamed(
@@ -193,7 +204,7 @@ class HttpClientWithInterceptor extends BaseClient {
     @required url,
     @required Map<String, String> headers,
     @required Map<String, String> files,
-    Map<String, String> params,
+    @required Map<String, String> params,
   }) async {
     if (url is String) {
       url = Uri.parse(addParametersToStringUrl(url, null));
