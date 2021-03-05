@@ -131,12 +131,10 @@ class HttpClientWithInterceptor extends BaseClient {
         encoding: encoding,
       );
 
-  Future<Response> delete(url, {Map<String, String> headers}) =>
-      _sendUnstreamed(
-        method: Method.DELETE,
-        url: url,
-        headers: headers,
-      );
+  Future<Response> delete(url,
+      {Map<String, String> headers, body, Encoding encoding})=>
+      _sendUnstreamed(method: Method.DELETE, url: url, headers: headers);
+
 
   Future<String> read(url, {Map<String, String> headers}) {
     return get(url, headers: headers).then((response) {

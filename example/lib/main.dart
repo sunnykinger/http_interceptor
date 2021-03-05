@@ -258,8 +258,9 @@ class WeatherRepository {
   Future<Map<String, dynamic>> fetchCityWeather(int id) async {
     var parsedWeather;
     try {
+      Uri uri = Uri.parse('$baseUrl.weather');
       final response =
-          await client.get("$baseUrl/weather", params: {'id': "$id"});
+          await client.get(uri, params: {'id': "$id"});
       if (response.statusCode == 200) {
         parsedWeather = json.decode(response.body);
       } else {
